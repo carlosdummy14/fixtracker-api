@@ -1,16 +1,11 @@
 const express = require('express');
-const {config} = require('./config');
+const { config } = require('./config/index');
+const ordersApi = require('./routes/orders.js');
 
 const app = express();
 
-app.get('/', function (req, res){
-  res.send('hello world');
-})
+ordersApi(app);
 
-app.get('/json', function(req,res){
-  res.json({hello: 'world'})
-})
-
-app.listen(config.port, function(){
+app.listen(config.port, function () {
   console.log(`Listening http://localhost:${config.port}`);
-})
+});
