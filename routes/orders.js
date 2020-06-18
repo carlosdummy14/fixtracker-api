@@ -1,14 +1,20 @@
 const express = require('express');
-const { ordersMock } = require('../utils/mocks/orders');
+const OrderService = require('../services/orders');
 
 function ordersApi(app) {
   const router = express.Router();
   app.use('/api/orders', router);
 
+  // service
+  const orderService = new OrderService();
+
   // get all orders
   router.get('/', async function (req, res, next) {
+    // tags query filter pending... ?nameOfQuery
+    const tags = req.query;
+
     try {
-      const orders = await Promise.resolve(ordersMock);
+      const orders = await orderService.getOrders({ tags });
 
       res.status(200).json({
         data: orders,
@@ -21,8 +27,10 @@ function ordersApi(app) {
 
   // get one order
   router.get('/:orderId', async function (req, res, next) {
+    const { orderId } = req.params;
+
     try {
-      const orders = await Promise.resolve(ordersMock[0]);
+      const orders = await orderService.getOrder({ orderId });
 
       res.status(200).json({
         data: orders,
@@ -35,8 +43,10 @@ function ordersApi(app) {
 
   // post order
   router.post('/', async function (req, res, next) {
+    const { body: order } = req;
+
     try {
-      const createdOrderId = await Promise.resolve(ordersMock[0].id);
+      const createdOrderId = await orderService.createOrder(order);
 
       res.status(201).json({
         data: createdOrderId,
@@ -49,8 +59,11 @@ function ordersApi(app) {
 
   // put order
   router.put('/:orderId', async function (req, res, next) {
+    const { orderId } = req.params;
+    const { body: order } = req;
+
     try {
-      const updatedOrderId = await Promise.resolve(ordersMock[0].id);
+      const updatedOrderId = await orderService.updateOrder({ orderId, order });
 
       res.status(200).json({
         data: updatedOrderId,
@@ -63,8 +76,10 @@ function ordersApi(app) {
 
   // delete order
   router.delete('/:orderId', async function (req, res, next) {
+    const { orderId } = req.params;
+
     try {
-      const deletedOrderId = await Promise.resolve(ordersMock[0].id);
+      const deletedOrderId = await orderService.deleteOrder({ orderId });
 
       res.status(200).json({
         data: deletedOrderId,
