@@ -1,28 +1,38 @@
-const { ordersMock } = require('../utils/mocks/orders');
+const MongoLib = require('../lib/mongo');
 
 class OrderService {
-  async getOrders() {
-    const orders = await Promise.resolve(ordersMock);
+  constructor() {
+    this.collection = 'orders';
+    this.mongoDB = new MongoLib();
+  }
+  async getOrders({ tags }) {
+    // filter
+    const query = tags && { tags: { $in: tags } }; //mongo syntax
+    const orders = await this.mongoDB.getAll(this.collection, query);
     return orders || [];
   }
 
-  async getOrder() {
-    const order = await Promise.resolve(ordersMock[0]);
+  async getOrder({orderId}) {
+    const order = await this.mongoDB.get(this.collection, orderId);
     return order || {};
   }
 
-  async createOrder() {
-    const createdOrderId = await Promise.resolve(ordersMock[0].id);
+  async createOrder({ order }) {
+    const createdOrderId = await this.mongoDB.create(this.collection, order);
     return createdOrderId;
   }
 
-  async updateOrder() {
-    const updatedOrderId = await Promise.resolve(ordersMock[0].id);
+  async updateOrder({ orderId, order } = {}) {
+    const updatedOrderId = await this.mongoDB.update(
+      this.collection,
+      orderId,
+      order
+    );
     return updatedOrderId;
   }
 
-  async deleteOrder() {
-    const deletedOrderId = await Promise.resolve(ordersMock[0].id);
+  async deleteOrder({ orderId }) {
+    const deletedOrderId = await this.mongoDB.delete(this.collection, orderId);
     return deletedOrderId;
   }
 }

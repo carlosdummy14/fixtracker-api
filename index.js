@@ -4,6 +4,8 @@ const ordersApi = require('./routes/orders.js');
 
 const app = express();
 
+app.use(express.json());
+
 ordersApi(app);
 
 app.listen(config.port, function () {
