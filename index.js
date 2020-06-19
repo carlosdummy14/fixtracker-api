@@ -1,17 +1,28 @@
 const express = require('express');
+const app = express();
+
 const { config } = require('./config/index');
 const ordersApi = require('./routes/orders.js');
-const {errorHandler, logErrors} = require('./utils/middleware/errorHandlers')
-const app = express();
+const {
+  errorHandler,
+  wrapErrors,
+  logErrors,
+} = require('./utils/middleware/errorHandlers');
+const notFoundHandler = require('./utils/middleware/notFoundHandler');
 
 // body parser
 app.use(express.json());
 
+// routes
 ordersApi(app);
 
-// errors handler
+// catch 404 error
+app.use(notFoundHandler);
+
+// errors handlers
 app.use(logErrors);
-app.use(errorHandler)
+app.use(wrapErrors);
+app.use(errorHandler);
 
 app.listen(config.port, function () {
   console.log(`Listening http://localhost:${config.port}`);
