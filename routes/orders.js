@@ -11,10 +11,11 @@ function ordersApi(app) {
   // get all orders
   router.get('/', async function (req, res, next) {
     // tags query filter pending... ?nameOfQuery
-    const {tags} = req.query;
+    const { tags } = req.query;
 
     try {
-      const orders = await orderService.getOrders( {tags} );
+      const orders = await orderService.getOrders({ tags });
+      //throw new Error('Error getting orders'); Error for test
 
       res.status(200).json({
         data: orders,
@@ -46,7 +47,7 @@ function ordersApi(app) {
     const { body: order } = req;
 
     try {
-      const createdOrderId = await orderService.createOrder({order});
+      const createdOrderId = await orderService.createOrder({ order });
 
       res.status(201).json({
         data: createdOrderId,
