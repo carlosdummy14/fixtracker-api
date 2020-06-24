@@ -2918,4 +2918,24 @@ const ordersMock = [
   },
 ];
 
-module.exports = { ordersMock };
+function filteredOrdersMock(positionTag) {
+  return ordersMock.filter((order) => order.position.includes(positionTag));
+}
+
+class OrdersSevicesMock {
+  async getOrders() {
+    return Promise.resolve(ordersMock);
+  }
+
+  async getOrder() {
+    return Promise.resolve(ordersMock[0]);
+  }
+
+  async createOrder() {
+    return Promise.resolve(ordersMock[0]);
+  }
+
+
+}
+
+module.exports = { ordersMock, filteredOrdersMock, OrdersSevicesMock };
