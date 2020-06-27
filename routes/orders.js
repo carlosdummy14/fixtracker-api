@@ -7,8 +7,16 @@ const {
   createOrderSchema,
   updateOrderSchema,
 } = require('../utils/schemas/orders');
+
 // validation handler
 const validationHandler = require('../utils/middleware/validationHandler');
+
+// cache
+const cacheResponse = require('../utils/cacheResponse');
+const {
+  FIVE_MINUTES_IN_SECONDS,
+  SIXTY_MINUTES_IN_SECONDS,
+} = require('../utils/time');
 
 function ordersApi(app) {
   const router = express.Router();
@@ -19,6 +27,7 @@ function ordersApi(app) {
 
   // get all orders
   router.get('/', async function (req, res, next) {
+    cacheResponse(res, FIVE_MINUTES_IN_SECONDS);
     // tags query filter pending... ?nameOfQuery
     const { tags } = req.query;
 
@@ -40,6 +49,8 @@ function ordersApi(app) {
     '/:orderId',
     validationHandler({ orderId: orderIdSchema }, 'params'),
     async function (req, res, next) {
+      cacheResponse(res, SIXTY_MINUTES_IN_SECONDS);
+
       const { orderId } = req.params;
 
       try {
