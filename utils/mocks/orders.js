@@ -2927,15 +2927,20 @@ class OrdersSevicesMock {
     return Promise.resolve(ordersMock);
   }
 
-  async getOrder() {
+  async getOrder({ orderId }) {
+    console.log(orderId);
     return Promise.resolve(ordersMock[0]);
   }
 
-  async createOrder() {
-    return Promise.resolve(ordersMock[0]);
+  async createOrder({ order }) {
+    console.log(order);
+    return Promise.resolve(ordersMock[0].id);
   }
 
-
+  async deleteOrder({ orderId }) {
+    console.log(orderId);
+    return Promise.resolve(ordersMock[0].id);
+  }
 }
 
 module.exports = { ordersMock, filteredOrdersMock, OrdersSevicesMock };
