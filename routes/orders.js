@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const OrderService = require('../services/orders');
 
 // schemas of validation
@@ -26,7 +27,7 @@ function ordersApi(app) {
   const orderService = new OrderService();
 
   // get all orders
-  router.get('/', async function (req, res, next) {
+  router.get('/',cors(), async function (req, res, next) {
     cacheResponse(res, FIVE_MINUTES_IN_SECONDS);
     // tags query filter pending... ?nameOfQuery
     const { tags } = req.query;
